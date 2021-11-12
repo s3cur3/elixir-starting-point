@@ -12,11 +12,24 @@ on setting up the ultimate Elixir CI, with a couple important tweaks:
    fails the format check, you'll still get feedback on whether it passed the tests,
    Credo, and Dialyzer, etc. 
 
+The three independent CI jobs it sets up are:
+
+1. Test (via ExUnit)
+2. Dialyzer
+3. Formatting and Credo (these could be separate tasks, but in my experience they run
+   fast enough even on large projects that it's not worth breaking them apart)
+
+We cache as much as we can between the jobs, so for instance your first run of Dialyzer
+will be sloooooooow, but subsequent ones should be faster. Do note that running the tasks
+in parallel, rather than sequentially, means you're trading CI time for dev productivity.
+I can't imagine an engineering team where this is the wrong tradeoff, but your mileage
+may vary.
+
 The important bits here for including in your project are:
 
 - `.github/`
-- `.formatter.exs`
 - `config/.credo.exs` (though do note that I've made some opinionated choices here)
+- `.formatter.exs` (opinionated choice: a very long max line length)
 - `mix.exs`, or at least the dependencies, Dialyzer config, and ExCoveralls config there
 - Optional: `.dialyzer_ignore.exs` (otherwise you'll need to remove that line from `mix.exs`)
 - Optional: `test.sh` for devs to run locally before committing (you could wire this
