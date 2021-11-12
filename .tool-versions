@@ -1,0 +1,7 @@
+# This lists the versions ASDF should use with this project.
+# If you're using ASDF to manage your Elixir runtimes, you
+# can do:
+# $ asdf install
+# to get going quickly.
+elixir 1.12.3-otp-24
+erlang 24.1

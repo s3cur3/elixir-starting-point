@@ -1,0 +1,11 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Format" type="MixRunConfigurationType" factoryName="Elixir Mix">
+    <module name="elixir-starting-point" />
+    <mix>
+      <argument>format</argument>
+    </mix>
+    <module name="elixir-starting-point" />
+    <module-filters inherit-application-module-filters="true" />
+    <method v="2" />
+  </configuration>
+</component>

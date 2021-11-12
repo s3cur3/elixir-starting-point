@@ -1,0 +1,50 @@
+name: Elixir Quality Checks
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - '*'
+
+jobs:
+  quality_checks:
+    runs-on: ubuntu-latest
+    env:
+      MIX_ENV: test
+
+    strategy:
+      matrix:
+        elixir: ['1.12.3']
+        otp: ['24.1']
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup elixir
+      uses: erlef/setup-beam@v1
+      with:
+        elixir-version: ${{matrix.elixir}}
+        otp-version: ${{matrix.otp}}
+    - name: Cache Dependency Sources
+      uses: actions/cache@v1
+      id: deps-cache
+      with:
+        path: deps
+        # If you ever need to clear the cache, increment the number after "v1" here
+        key: dependencies-v1-${{matrix.elixir}}-${{ hashFiles('**/mix.lock') }}
+        restore-keys: dependencies-${{ hashFiles('**/mix.lock') }}
+    - name: Cache Compiled Files
+      uses: actions/cache@v1
+      with:
+        path: _build/test/
+        key: compiled-test-${{matrix.elixir}}-${{ hashFiles('**/mix.lock') }}
+        restore-keys: compiled-test-${{matrix.elixir}}
+    - name: Install Dependencies
+      run: mix deps.get
+    - name: Run Credo
+      run: mix credo
+    # The format check gets run even if Credo fails so that
+    # we give the devs as much feedback as possible & save some time.
+    - name: Check Formatting
+      run: mix format --check-formatted
+      if: always()

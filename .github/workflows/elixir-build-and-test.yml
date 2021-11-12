@@ -1,0 +1,53 @@
+name: ExUnit Tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - '*'
+
+jobs:
+  test:
+    name: ExUnit Tests
+    runs-on: [ubuntu-20.04]
+    env:
+      MIX_ENV: test
+
+    strategy:
+      matrix:
+        elixir: ['1.12.3']
+        otp: ['24.1']
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup elixir
+      uses: erlef/setup-beam@v1
+      with:
+        elixir-version: ${{matrix.elixir}}
+        otp-version: ${{matrix.otp}}
+    - name: Cache Dependency Sources
+      uses: actions/cache@v1
+      id: deps-cache
+      with:
+        path: deps
+        # If you ever need to clear the cache, increment the number after "v1" here
+        key: dependencies-v1-${{matrix.elixir}}-${{ hashFiles('**/mix.lock') }}
+        restore-keys: dependencies-${{ hashFiles('**/mix.lock') }}
+    - name: Cache Compiled Files
+      uses: actions/cache@v1
+      with:
+        path: _build/test/
+        key: compiled-test-${{matrix.elixir}}-${{ hashFiles('**/mix.lock') }}
+        restore-keys: compiled-test-${{matrix.elixir}}
+    - name: Install Dependencies
+      run: mix deps.get
+    - name: Build ${{matrix.project}}
+      run: mix compile --all-warnings --warnings-as-errors
+    # If the compile fails, it's likely due to a warning. Go ahead and run the tests
+    # to give the devs feedback and save them some time.
+    - name: Run Tests
+      run: mix test --trace
+      if: always()
+
+    # TODO: Log test coverage

@@ -1,0 +1,46 @@
+name: Elixir Dialyzer
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - '*'
+
+jobs:
+  dialyzer:
+    name: Run Dialyzer type checking
+    runs-on: [ubuntu-20.04]
+
+    strategy:
+      matrix:
+        elixir: ['1.12.3']
+        otp: ['24.1']
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup elixir
+        uses: erlef/setup-beam@v1
+        with:
+          elixir-version: ${{matrix.elixir}}
+          otp-version: ${{matrix.otp}}
+      - name: Cache Dependency Sources
+        uses: actions/cache@v1
+        id: deps-cache
+        with:
+          path: deps
+          # If you ever need to clear the cache, increment the number after "v1" here
+          key: dependencies-v1-${{matrix.elixir}}-${{ hashFiles('**/mix.lock') }}
+          restore-keys: dependencies-${{ hashFiles('**/mix.lock') }}
+      - name: Cache Compiled Files
+        uses: actions/cache@v1
+        with:
+          path: _build/dev/
+          key: compiled-dev-${{matrix.elixir}}-${{ hashFiles('**/mix.lock') }}
+          restore-keys: compiled-dev-${{matrix.elixir}}
+      - name: Install Dependencies
+        run: mix deps.get
+      - name: Generate PLT
+        run: mix dialyzer --plt
+      - name: Run Dialyzer
+        run: mix dialyzer
