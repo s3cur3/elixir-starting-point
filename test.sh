@@ -42,7 +42,11 @@ else
   echo ""
 fi
 
-mix test --trace
+# You might consider adding the --stale flag here as well.
+# Doing so will cause Mix to attempt to run only the tests that reference modules
+# that have changed since the last CI run.
+# https://hexdocs.pm/mix/1.12/Mix.Tasks.Test.html#module-the-stale-optionmix test
+mix test
 TEST_RES=$?
 if [ $TEST_RES -ne 0 ]
 then

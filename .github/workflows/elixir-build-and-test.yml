@@ -47,7 +47,11 @@ jobs:
     # If the compile fails, it's likely due to a warning. Go ahead and run the tests
     # to give the devs feedback and save them some time.
     - name: Run Tests
-      run: mix test --trace
+      # You might consider adding the --stale flag here as well.
+      # Doing so will cause Mix to attempt to run only the tests that reference modules
+      # that have changed since the last CI run.
+      # https://hexdocs.pm/mix/1.12/Mix.Tasks.Test.html#module-the-stale-option
+      run: mix test
       if: always()
 
     # TODO: Log test coverage
