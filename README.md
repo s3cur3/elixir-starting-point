@@ -38,3 +38,9 @@ The important bits here for including in your project are:
   up as a pre-commit hook if it's fast enough)
 - Optional: `.idea/` if you use Jetbrains Intellij as your IDE (this gets you run
   configurations for formatting & ExUnit tests)
+
+## Contributions welcome!
+
+If you have ideas for improvements, by all means open up an issue or submit a PR.
+My philosophy here has basically been to keep things generic while attempting to
+povide devs with fast, valuable feedback.
