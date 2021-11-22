@@ -35,7 +35,7 @@ defmodule ElixirStartingPoint.MixProject do
 
   defp deps do
     [
-      {:credo, "~> 1.5.6", only: [:dev, :test], runtime: false},
+      {:credo, "~> 1.6.1", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.1", only: [:dev, :test], runtime: false},
       {:excoveralls, "~> 0.14", only: [:dev, :test], runtime: false}
     ]
