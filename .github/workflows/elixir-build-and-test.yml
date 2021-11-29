@@ -42,7 +42,7 @@ jobs:
         restore-keys: compiled-test-${{matrix.elixir}}
     - name: Install Dependencies
       run: mix deps.get
-    - name: Build ${{matrix.project}}
+    - name: Build
       run: mix compile --all-warnings --warnings-as-errors
     # If the compile fails, it's likely due to a warning. Go ahead and run the tests
     # to give the devs feedback and save them some time.
