@@ -40,6 +40,16 @@ jobs:
         path: _build/test/
         key: compiled-test-${{matrix.elixir}}-${{ hashFiles('**/mix.lock') }}
         restore-keys: compiled-test-${{matrix.elixir}}
+    # In my experience, I have issues with incremental builds maybe 1 in 100
+    # times that are fixed by doing a full recompile.
+    # In order to not waste dev time on such trivial issues (while also reaping
+    # the time savings of incremental builds for *most* day-to-day development),
+    # I force a full recompile only on builds that we retry.
+    - name: Clean
+      if: github.run_attempt != '1'
+      run: | 
+        mix deps.clean --all
+        mix clean
     - name: Install Dependencies
       run: mix deps.get
     - name: Build
