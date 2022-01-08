@@ -26,7 +26,7 @@ jobs:
         elixir-version: ${{matrix.elixir}}
         otp-version: ${{matrix.otp}}
     - name: Cache Dependency Sources
-      uses: actions/cache@v1
+      uses: actions/cache@v2
       id: deps-cache
       with:
         path: deps
@@ -34,7 +34,7 @@ jobs:
         key: dependencies-v1-${{matrix.elixir}}-${{ hashFiles('**/mix.lock') }}
         restore-keys: dependencies-${{ hashFiles('**/mix.lock') }}
     - name: Cache Compiled Files
-      uses: actions/cache@v1
+      uses: actions/cache@v2
       with:
         path: _build/test/
         key: compiled-test-${{matrix.elixir}}-${{ hashFiles('**/mix.lock') }}
